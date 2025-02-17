@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue"
 
+import placeholderImg from "@/assets/images/placeholder.png"
+
 const props = withDefaults(
     defineProps<{
         doll: string
@@ -24,7 +26,7 @@ const src = computed(() => {
     const key = props.doll as keyof typeof props.dollsToPaths
     const path = props.dollsToPaths[key]
 
-    return path || "/src/assets/images/placeholder.png"
+    return path || placeholderImg
 })
 
 const supportBadgeClasses = computed(() => {
