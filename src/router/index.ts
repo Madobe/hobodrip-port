@@ -1,23 +1,33 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from "vue-router"
+import HomeView from "../views/HomeView.vue"
+import DailyChecklist from "@/views/DailyChecklist.vue"
+import TeamBuilder from "@/views/TeamBuilder.vue"
+import GiftBoxes from "@/views/GiftBoxes.vue"
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
-    },
-  ],
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+        {
+            path: "/",
+            name: "home",
+            component: HomeView,
+        },
+        {
+            path: "/daily-checklist",
+            name: "daily-checklist",
+            component: () => DailyChecklist,
+        },
+        {
+            path: "/team-builder",
+            name: "team-builder",
+            component: () => TeamBuilder,
+        },
+        {
+            path: "/gift-boxes",
+            name: "gift-boxes",
+            component: () => GiftBoxes,
+        },
+    ],
 })
 
 export default router

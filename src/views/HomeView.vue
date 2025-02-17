@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import MemberList from "../components/MemberList.vue"
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+    <div class="container-fluid">
+        <div class="col-12 col-md-10 offset-md-1">
+            <MemberList></MemberList>
+        </div>
+    </div>
 </template>
