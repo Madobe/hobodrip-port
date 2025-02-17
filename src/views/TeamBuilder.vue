@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Validator } from "jsonschema"
+
 import { useTeamsStore } from "@/stores/teams"
 
 import DollFigure from "@/components/DollFigure.vue"
@@ -39,9 +41,32 @@ for (let i = 0; i < dolls.length; i += dollsPerRow) {
 }
 
 // Initialize the store's saved teams from the local storage
+const validator = new Validator()
+const schema = {
+    id: "/Sets",
+    type: "array",
+    items: {
+        type: "object",
+        properties: {
+            name: { "type": "string" },
+            teams: {
+                type: "array",
+                items: {
+                    type: "string"
+                }
+            }
+        }
+    }
+}
 const data = localStorage.getItem("hobodrip.teambuilder")
+
 if (data) {
-    teams.loadSets(JSON.parse(data))
+    const parsedData = JSON.parse(data)
+    console.log(validator.validate(parsedData, schema))
+
+    if (validator.validate(parsedData, schema).valid) {
+        teams.loadSets(parsedData)
+    }
 } else {
     teams.addSet()
 }
