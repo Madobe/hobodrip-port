@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router"
 import HomeView from "../views/HomeView.vue"
+import DailyChecklist from "@/views/DailyChecklist.vue"
+import TeamBuilder from "@/views/TeamBuilder.vue"
+import GiftBoxes from "@/views/GiftBoxes.vue"
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,17 +15,17 @@ const router = createRouter({
         {
             path: "/daily-checklist",
             name: "daily-checklist",
-            component: () => import("@/views/DailyChecklist.vue"),
+            component: DailyChecklist,
         },
         {
             path: "/team-builder",
             name: "team-builder",
-            component: () => import("@/views/TeamBuilder.vue"),
+            component: TeamBuilder,
         },
         {
             path: "/gift-boxes",
             name: "gift-boxes",
-            component: () => import("@/views/GiftBoxes.vue"),
+            component: GiftBoxes,
         },
     ],
 })
