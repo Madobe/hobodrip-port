@@ -35,50 +35,34 @@ const supportBadgeClasses = computed(() => {
 </script>
 
 <template>
-    <figure
-        class="figure position-relative"
-        @click="
-            select ? $emit('dollSelect', doll) : $emit('dollDeselect', index)
-        "
-    >
-        <img
-            :class="[
-                'img-fluid rounded mx-auto d-block user-select-none',
-                select ? 'bg-secondary' : '',
-                !!teams.length ? 'opacity-25' : '',
-            ]"
-            :src="src"
-            :alt="doll"
-        />
-        <span
-            v-if="!!teams.length"
-            v-for="(team, i) in teams"
-            :class="[
-                `badge rounded-pill position-absolute top-0`,
-                selectedTeam === team - 1 ? 'text-bg-primary' : '',
-            ]"
-        >
+    <figure class="figure position-relative" @click="
+        select ? $emit('dollSelect', doll) : $emit('dollDeselect', index)
+        ">
+        <img :class="[
+            'img-fluid rounded mx-auto d-block user-select-none',
+            select ? 'bg-secondary' : '',
+            !!teams.length ? 'opacity-25' : '',
+        ]" :src="src" :alt="doll" />
+        <span v-if="!!teams.length" v-for="(team, i) in teams" :class="[
+            `badge rounded-pill position-absolute top-0`,
+            selectedTeam === team - 1 ? 'text-bg-primary' : '',
+        ]">
             {{ team }}
         </span>
-        <span
-            v-if="isSupport"
-            :class="[
-                'badge rounded-pill position-absolute top-0 end-0',
-                supportBadgeClasses,
-            ]"
-        >
+        <span v-if="isSupport" :class="[
+            'badge rounded-pill position-absolute top-0 end-0',
+            supportBadgeClasses,
+        ]">
             S
         </span>
-        <figcaption
-            class="d-none d-md-block figure-caption text-center user-select-none"
-        >
+        <figcaption class="d-none d-md-block figure-caption text-center user-select-none">
             {{ doll || "&nbsp;" }}
         </figcaption>
     </figure>
 </template>
 
 <style scoped>
-figure > img {
+figure>img {
     aspect-ratio: 1/1;
     cursor: pointer;
     max-height: 90px;
@@ -86,7 +70,7 @@ figure > img {
     object-fit: contain;
 }
 
-figure > figcaption {
+figure>figcaption {
     cursor: pointer;
 }
 
