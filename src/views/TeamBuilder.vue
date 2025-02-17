@@ -62,10 +62,11 @@ const data = localStorage.getItem("hobodrip.teambuilder")
 
 if (data) {
     const parsedData = JSON.parse(data)
-    console.log(validator.validate(parsedData, schema))
 
     if (validator.validate(parsedData, schema).valid) {
         teams.loadSets(parsedData)
+    } else {
+        teams.addSet()
     }
 } else {
     teams.addSet()
