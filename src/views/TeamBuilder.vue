@@ -5,6 +5,9 @@ import DollFigure from "@/components/DollFigure.vue"
 import SetChangeModal from "@/components/SetChangeModal.vue"
 import JSONModal from "@/components/JSONModal.vue"
 
+const hyphenatedDollNames = [
+    "Mosin-Nagant"
+]
 const teams = useTeamsStore()
 
 const files: Record<string, string> = import.meta.glob(
@@ -12,17 +15,14 @@ const files: Record<string, string> = import.meta.glob(
     { eager: true, import: "default" },
 )
 const paths = Object.values(files)
-const hyphenCheck = paths.filter(p => p.includes("-")).length === paths.length
 const dolls = paths.map((path: string) => {
     let doll = path.replace(/^.*[\\/](.+).png$/, "$1")
 
-    // If there's a hyphen in every one, then we're dealing with hashed names
-    if (hyphenCheck) {
-        doll = doll
-            .split("-")
-            .slice(0, -1)
-            .join("-")
+    for (let i = 0; i < hyphenatedDollNames.length; i++) {
+        if (doll.includes(hyphenatedDollNames[i])) return hyphenatedDollNames[i]
     }
+
+    doll = doll.replace(/-.*/, "")
 
     return doll
 })
