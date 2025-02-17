@@ -20,6 +20,13 @@ const props = withDefaults(
     },
 )
 
+const src = computed(() => {
+    const key = props.doll as keyof typeof props.dollsToPaths
+    const path = props.dollsToPaths[key]
+
+    return path || "/src/assets/images/placeholder.png"
+})
+
 const supportBadgeClasses = computed(() => {
     if (props.supportTeams.includes(props.selectedTeam)) {
         return "text-bg-primary"
@@ -32,7 +39,7 @@ const supportBadgeClasses = computed(() => {
 <template>
     <figure class="figure position-relative" @click="select ? $emit('dollSelect', doll) : $emit('dollDeselect', index)">
         <img :class="['img-fluid rounded mx-auto d-block user-select-none',
-            select ? 'bg-secondary' : '', !!teams.length ? 'opacity-25' : '']" :src="dollsToPaths[doll]" :alt="doll" />
+            select ? 'bg-secondary' : '', !!teams.length ? 'opacity-25' : '']" :src="src" :alt="doll" />
         <span v-if="!!teams.length" v-for="(team, i) in teams" :class="[`badge rounded-pill position-absolute top-0`,
             selectedTeam === team - 1 ? 'text-bg-primary' : '']">
             {{ team }}

@@ -12,9 +12,20 @@ const files: Record<string, string> = import.meta.glob(
     { eager: true, import: "default" },
 )
 const paths = Object.values(files)
-const dolls = paths.map((path: string) =>
-    path.replace(/^.*[\\/](.+).png$/, "$1"),
-)
+const hyphenCheck = paths.filter(p => p.includes("-")).length === paths.length
+const dolls = paths.map((path: string) => {
+    let doll = path.replace(/^.*[\\/](.+).png$/, "$1")
+
+    // If there's a hyphen in every one, then we're dealing with hashed names
+    if (hyphenCheck) {
+        doll = doll
+            .split("-")
+            .slice(0, -1)
+            .join("-")
+    }
+
+    return doll
+})
 const dollsToPaths = dolls.reduce((accumulator, doll, i) => {
     return Object.assign(accumulator, {
         [doll]: paths[i]
