@@ -8,12 +8,18 @@ import JSONModal from "@/components/JSONModal.vue"
 const teams = useTeamsStore()
 
 const files: Record<string, string> = import.meta.glob(
-    "/public/images/dolls/*.png",
+    "@/assets/images/dolls/*.png",
     { eager: true, import: "default" },
 )
-const dolls = Object.values(files).map((path: string) =>
+const paths = Object.values(files)
+const dolls = paths.map((path: string) =>
     path.replace(/^.*[\\/](.+).png$/, "$1"),
 )
+const dollsToPaths = dolls.reduce((accumulator, doll, i) => {
+    return Object.assign(accumulator, {
+        [doll]: paths[i]
+    })
+}, {})
 
 const dollsPerRow = 4
 let dollsByFours: string[][] = []
@@ -74,90 +80,51 @@ function isSupport(doll: string) {
 </script>
 
 <template>
-    <SetChangeModal
-        :selectedAccount="teams.selectedAccount"
-        :sets="teams.teams"
-        @addSet="teams.addSet"
-        @removeSet="teams.removeSet"
-        @renameAccount="teams.renameAccount"
-        @selectAccount="teams.selectAccount"
-    >
+    <SetChangeModal :selectedAccount="teams.selectedAccount" :sets="teams.teams" @addSet="teams.addSet"
+        @removeSet="teams.removeSet" @renameAccount="teams.renameAccount" @selectAccount="teams.selectAccount">
     </SetChangeModal>
     <JSONModal :sets="teams.teams" @loadSets="teams.loadSets"></JSONModal>
 
     <div class="container-fluid d-flex flex-column team-roster">
         <div class="row py-3" style="min-height: 0">
-            <div
-                class="col-3 col-md-4 mh-100 overflow-x-hidden overflow-y-scroll"
-            >
+            <div class="col-3 col-md-4 mh-100 overflow-x-hidden overflow-y-scroll">
                 <div class="row" v-for="dolls in dollsByFours">
                     <div class="col-12 col-md-3" v-for="doll in dolls">
-                        <DollFigure
-                            :doll="doll"
-                            :isSupport="isSupport(doll)"
-                            select
-                            :selectedTeam="teams.selectedTeam"
-                            :supportTeams="getSupportTeams(doll)"
-                            :teams="getMainTeams(doll)"
-                            @dollSelect="teams.selectDoll(doll)"
-                        ></DollFigure>
+                        <DollFigure :doll="doll" :dollsToPaths="dollsToPaths" :isSupport="isSupport(doll)" select
+                            :selectedTeam="teams.selectedTeam" :supportTeams="getSupportTeams(doll)"
+                            :teams="getMainTeams(doll)" @dollSelect="teams.selectDoll(doll)"></DollFigure>
                     </div>
                 </div>
             </div>
 
-            <div
-                class="col-9 col-md-8 row d-flex flex-column justify-content-center"
-            >
+            <div class="col-9 col-md-8 row d-flex flex-column justify-content-center">
                 <template v-for="(team, a) in 3">
-                    <div
-                        :class="[
-                            'container-fluid col-md-10 d-flex justify-content-evenly rounded mt-2 pt-4 pe-md-4',
-                            a === teams.selectedTeam
-                                ? 'bg-primary'
-                                : 'bg-secondary',
-                        ]"
-                        @click="teams.selectTeam(a)"
-                    >
-                        <div
-                            class="d-none d-md-flex justify-content-center align-items-center"
-                        >
-                            <span
-                                class="text-center fw-bold pb-3 user-select-none"
-                                >Team {{ team }}</span
-                            >
+                    <div :class="[
+                        'container-fluid col-md-10 d-flex justify-content-evenly rounded mt-2 pt-4 pe-md-4',
+                        a === teams.selectedTeam
+                            ? 'bg-primary'
+                            : 'bg-secondary',
+                    ]" @click="teams.selectTeam(a)">
+                        <div class="d-none d-md-flex justify-content-center align-items-center">
+                            <span class="text-center fw-bold pb-3 user-select-none">Team {{ team }}</span>
                         </div>
                         <div v-for="(slot, b) in 5">
-                            <DollFigure
-                                :doll="teams.selectedDolls[a * 5 + b]"
-                                :index="a * 5 + b"
-                                @dollDeselect="teams.deselectDoll"
-                            >
+                            <DollFigure :doll="teams.selectedDolls[a * 5 + b]" :dollsToPaths="dollsToPaths"
+                                :index="a * 5 + b" @dollDeselect="teams.deselectDoll">
                             </DollFigure>
                         </div>
                     </div>
                 </template>
 
                 <div
-                    class="container-fluid col-md-10 mt-2 mt-md-3 grid gap-2 d-md-flex flex-md-row justify-content-end"
-                >
-                    <button
-                        class="btn btn-danger me-md-auto"
-                        @click="teams.resetSelections"
-                    >
+                    class="container-fluid col-md-10 mt-2 mt-md-3 grid gap-2 d-md-flex flex-md-row justify-content-end">
+                    <button class="btn btn-danger me-md-auto" @click="teams.resetSelections">
                         Reset
                     </button>
-                    <button
-                        class="btn btn-light"
-                        data-bs-target="#set-change-modal"
-                        data-bs-toggle="modal"
-                    >
+                    <button class="btn btn-light" data-bs-target="#set-change-modal" data-bs-toggle="modal">
                         Change Set
                     </button>
-                    <button
-                        class="btn btn-light ms-md-2"
-                        data-bs-target="#import-export-modal"
-                        data-bs-toggle="modal"
-                    >
+                    <button class="btn btn-light ms-md-2" data-bs-target="#import-export-modal" data-bs-toggle="modal">
                         Import/Export
                     </button>
                 </div>
@@ -177,7 +144,7 @@ function isSupport(doll: string) {
 }
 
 @media (max-width: 767.98px) {
-    figure > figcaption {
+    figure>figcaption {
         display: none;
     }
 

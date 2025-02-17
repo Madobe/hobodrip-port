@@ -4,6 +4,7 @@ import { computed } from "vue"
 const props = withDefaults(
     defineProps<{
         doll: string
+        dollsToPaths: { [x: string]: string },
         index?: number
         isSupport?: boolean
         select?: boolean
@@ -19,12 +20,6 @@ const props = withDefaults(
     },
 )
 
-const src = computed(() => {
-    return props.doll
-        ? `/images/dolls/${props.doll}.png`
-        : "/images/placeholder.png"
-})
-
 const supportBadgeClasses = computed(() => {
     if (props.supportTeams.includes(props.selectedTeam)) {
         return "text-bg-primary"
@@ -35,24 +30,14 @@ const supportBadgeClasses = computed(() => {
 </script>
 
 <template>
-    <figure class="figure position-relative" @click="
-        select ? $emit('dollSelect', doll) : $emit('dollDeselect', index)
-        ">
-        <img :class="[
-            'img-fluid rounded mx-auto d-block user-select-none',
-            select ? 'bg-secondary' : '',
-            !!teams.length ? 'opacity-25' : '',
-        ]" :src="src" :alt="doll" />
-        <span v-if="!!teams.length" v-for="(team, i) in teams" :class="[
-            `badge rounded-pill position-absolute top-0`,
-            selectedTeam === team - 1 ? 'text-bg-primary' : '',
-        ]">
+    <figure class="figure position-relative" @click="select ? $emit('dollSelect', doll) : $emit('dollDeselect', index)">
+        <img :class="['img-fluid rounded mx-auto d-block user-select-none',
+            select ? 'bg-secondary' : '', !!teams.length ? 'opacity-25' : '']" :src="dollsToPaths[doll]" :alt="doll" />
+        <span v-if="!!teams.length" v-for="(team, i) in teams" :class="[`badge rounded-pill position-absolute top-0`,
+            selectedTeam === team - 1 ? 'text-bg-primary' : '']">
             {{ team }}
         </span>
-        <span v-if="isSupport" :class="[
-            'badge rounded-pill position-absolute top-0 end-0',
-            supportBadgeClasses,
-        ]">
+        <span v-if="isSupport" :class="['badge rounded-pill position-absolute top-0 end-0', supportBadgeClasses]">
             S
         </span>
         <figcaption class="d-none d-md-block figure-caption text-center user-select-none">
